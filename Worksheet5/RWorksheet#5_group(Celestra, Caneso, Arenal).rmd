@@ -8,6 +8,12 @@ date: "2024-11-06"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+**1.**
+```{r}
+
+```
+**________________________________________________________**
+
 *IMDB URL*
 ```{r}
 library(rvest)
@@ -56,7 +62,6 @@ colnames(rating_list_sub) <- "ratings"
 
 ```
 
-
 *Number of People who voted*
 ```{r}
 people_list <- scrape(session) %>%
@@ -66,7 +71,7 @@ html_text
 people_list_sub <- as.data.frame(people_list[1:25])
 
 
-colnames(people_list_sub) <- "people"
+colnames(people_list_sub) <- "Vote Count"
 ```
 
 *Episode and Year it was released*
@@ -87,6 +92,119 @@ year_list_sub <-as.data.frame(year_list[1:25])
 colnames(year_list_sub) <- "year"
 
 ```
+
+**User Reviews**
+```{r}
+library(rvest)
+library(dplyr)
+
+home_link <- 'https://www.imdb.com/chart/toptv/'
+main_page <- read_html(home_link)
+
+# Extract links to individual TV show pages
+links <- main_page %>%
+  html_nodes("a.ipc-title-link-wrapper") %>%
+  html_attr("href")
+
+# Ensure we have links
+if(length(links) == 0) {
+  stop("No links found")
+}
+
+# Loop through each show page and extract relevant data
+show_data <- lapply(links, function(link) {
+  complete_link <- paste0("https://imdb.com", link)
+  
+  # Get the show's page
+  usrv_link <- tryCatch({
+    read_html(complete_link)
+  }, error = function(e) {
+    return(NULL)  # If there's an error, return NULL
+  })
+  
+  # If the show page wasn't loaded successfully, skip to the next iteration
+  if (is.null(usrv_link)) return(NULL)
+
+  # Extract user review page link (if exists)
+  usrv_link_page <- usrv_link %>%
+    html_nodes('a.isReview') %>%
+    html_attr("href")
+  
+  # Check if the user review link exists
+  if (length(usrv_link_page) == 0) {
+    usrv_link_page <- NA
+  } else {
+    usrv_link_page <- usrv_link_page[1]
+  }
+
+  # Extract critic reviews (if they exist)
+  critic <- usrv_link %>%
+    html_nodes("span.score") %>%
+    html_text()
+  
+  # Handle case where there may be no critic reviews
+  critic_review <- if(length(critic) >= 2) critic[2] else NA
+  critic_df <- data.frame(Critic_Reviews = critic_review, stringsAsFactors = FALSE)
+  
+  # Extract popularity rating (if it exists)
+  pop_rating <- usrv_link %>%
+    html_nodes('[data-testid="hero-rating-bar__popularity__score"]') %>%
+    html_text()
+  
+  # Handle missing popularity rating
+  pop_rating <- if(length(pop_rating) > 0) pop_rating else NA
+  
+  # If a user review link exists, extract the user review count
+  usrv_count <- NA
+  if (!is.na(usrv_link_page)) {
+    usrv_page <- tryCatch({
+      read_html(paste0("https://imdb.com", usrv_link_page))
+    }, error = function(e) {
+      return(NULL)  # If user review page fails to load
+    })
+    
+    # If user review page loads, extract review count
+    if (!is.null(usrv_page)) {
+      usrv_count <- usrv_page %>%
+        html_nodes('[data-testid="tturv-total-reviews"]') %>%
+        html_text()
+    }
+  }
+
+  # Return a data frame with the extracted data
+  return(data.frame(Show_Link = complete_link, 
+                    User_Reviews = usrv_count, 
+                    Critic = critic_df$Critic_Reviews, 
+                    Popularity_Rating = pop_rating, 
+                    stringsAsFactors = FALSE))
+})
+
+# Combine all show data into a single data frame (ignoring NULL values)
+show_data <- bind_rows(show_data)
+
+# View the first few rows
+head(show_data)
+
+```
+
+**________________________________________________________**
+```{r}
+
+```
+
+
+
+**2.**
+```{r}
+
+```
+
+
+
+
+
+
+
 
 
 *Final List*
