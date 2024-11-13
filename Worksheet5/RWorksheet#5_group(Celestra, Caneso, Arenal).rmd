@@ -7,19 +7,23 @@ date: "2024-11-06"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+**[EXTRACTING TV SHOWS REVIEWS]**
+```{r}
+```
 **1.**
 ```{r}
 
 ```
 **________________________________________________________**
-
-*IMDB URL*
+**Libraries**
 ```{r}
 library(rvest)
 library(httr)
 library(polite)
+```
 
+*IMDB URL*
+```{r}
 polite::use_manners(save_as = 'polite_scrape.R')
 
 url <- "https://www.imdb.com/chart/toptv/?ref_=nv_tvv_250"
@@ -93,11 +97,10 @@ colnames(year_list_sub) <- "year"
 
 ```
 
-**User Reviews**
+**User Reviews, Critic Reviews, and Popularity Rating**
 ```{r}
 library(rvest)
 library(dplyr)
-
 home_link <- 'https://www.imdb.com/chart/toptv/'
 main_page <- read_html(home_link)
 
@@ -124,7 +127,6 @@ show_data <- lapply(links, function(link) {
   
   # If the show page wasn't loaded successfully, skip to the next iteration
   if (is.null(usrv_link)) return(NULL)
-
   # Extract user review page link (if exists)
   usrv_link_page <- usrv_link %>%
     html_nodes('a.isReview') %>%
@@ -136,7 +138,6 @@ show_data <- lapply(links, function(link) {
   } else {
     usrv_link_page <- usrv_link_page[1]
   }
-
   # Extract critic reviews (if they exist)
   critic <- usrv_link %>%
     html_nodes("span.score") %>%
@@ -170,42 +171,25 @@ show_data <- lapply(links, function(link) {
         html_text()
     }
   }
-
   # Return a data frame with the extracted data
-  return(data.frame(Show_Link = complete_link, 
-                    User_Reviews = usrv_count, 
+  return(data.frame(User_Reviews = usrv_count, 
                     Critic = critic_df$Critic_Reviews, 
                     Popularity_Rating = pop_rating, 
                     stringsAsFactors = FALSE))
 })
-
 # Combine all show data into a single data frame (ignoring NULL values)
 show_data <- bind_rows(show_data)
-
 # View the first few rows
-head(show_data)
-
+show_data <- head(show_data, 25)
+show_data
 ```
-
 **________________________________________________________**
 ```{r}
-
 ```
-
-
-
 **2.**
 ```{r}
 
 ```
-
-
-
-
-
-
-
-
 
 *Final List*
 ```{r}
@@ -214,4 +198,12 @@ tv_shows
 
 ```
 
+
+
+
+
+**[EXTRACTING AMAZON PRODUCT REVIEWS]**
+```{r}
+url2 <- 
+```
 
