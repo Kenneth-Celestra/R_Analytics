@@ -12,7 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 **1.**
 ```{r}
-
 ```
 **________________________________________________________**
 **Libraries**
@@ -22,6 +21,7 @@ library(httr)
 library(polite)
 library(dplyr)
 library(stringr)
+library(knitr)
 ```
 
 *IMDB URL*
@@ -63,9 +63,6 @@ rating_list <- scrape(session) %>%
 html_nodes('span.ipc-rating-star--rating') %>%
 html_text
 
-rating_list_sub <- as.data.frame(rating_list[1:25])
-colnames(rating_list_sub) <- "ratings"
-
 ```
 
 *Number of People who voted*
@@ -74,10 +71,6 @@ people_list <- scrape(session) %>%
 html_nodes('span.ipc-rating-star--voteCount') %>%
 html_text
 
-people_list_sub <- as.data.frame(people_list[1:25])
-
-
-colnames(people_list_sub) <- "Vote Count"
 ```
 
 *Episode and Year it was released*
@@ -86,16 +79,10 @@ episode_list <- scrape(session) %>%
 html_nodes('span.sc-5bc66c50-6.OOdsw.cli-title-metadata-item:nth-of-type(2)') %>%
 html_text
 
-episode_list_sub <-as.data.frame(episode_list[1:25])
-
-colnames(episode_list_sub) <- "episode"
-
 
 year_list <- scrape(session) %>%
 html_nodes('span.sc-5bc66c50-6.OOdsw.cli-title-metadata-item:nth-of-type(1)') %>%
 html_text
-year_list_sub <-as.data.frame(year_list[1:25])
-colnames(year_list_sub) <- "year"
 
 ```
 
@@ -181,13 +168,28 @@ show_data <- lapply(links, function(link) {
 show_data <- bind_rows(show_data)
 # View the first few rows
 show_data <- head(show_data, 25)
-show_data
+```
+
+**FINAL DATA**
+```{r}
+tv_shows <- data.frame(Ranking = split_df$ranks,
+                       TV_Show_Title = split_df$titles,
+                       Episodes = episode_list[1:25],
+                       Release_Year = year_list[1:25],
+                       Rating = rating_list[1:25],
+                       No._of_Voter = people_list[1:25],
+                       User_Review = show_data$User_Reviews,
+                       Popularity = show_data$Popularity_Rating,
+                       Critic = show_data$Critic)
+
+kable(tv_shows, padding = 20, caption = "Top TV Shows")
 ```
 **________________________________________________________**
 ```{r}
+#just for space
 ```
 
-**2.**
+**2. Top 5 TV Shows**
 ```{r}
 
 
@@ -230,14 +232,12 @@ html_text() %>%
 #Helpful
 helpful <- scrape(sessions) %>%
 html_nodes('span.ipc-voting__label__count.ipc-voting__label__count--up') %>%
-html_text() %>%
-  head(20)
+html_text()
 
 #Unhelpful
 unhelpful <- scrape(sessions) %>%
-html_nodes('.ipc-voting__label__count--down') %>%
-html_text() %>%
-  head(20)
+html_nodes('span.ipc-voting__label__count.ipc-voting__label__count--down') %>%
+html_text() 
 
 #Data frame for the user reviews.
 userReviews <- data.frame(user_Name = userName[1:20],
@@ -257,25 +257,26 @@ df[[3]]
 df[[4]]
 df[[5]]
 ```
-
+**________________________________________________________**
 ```{r}
+#just for space
+```
 
+**3.**
+```{r}
+#just for space
 ```
 
 
-*Final List*
+
+**_______________________________________________________________________________________________**
 ```{r}
-tv_shows <- cbind(split_df, rating_list_sub, people_list_sub,episode_list_sub, year_list_sub)
-tv_shows
-
+#just for space
 ```
-
-
-
 
 
 **[EXTRACTING AMAZON PRODUCT REVIEWS]**
 ```{r}
-url2 <- 
+
 ```
 
