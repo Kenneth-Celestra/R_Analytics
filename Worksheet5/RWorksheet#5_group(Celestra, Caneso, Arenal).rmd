@@ -20,6 +20,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(rvest)
 library(httr)
 library(polite)
+library(dplyr)
+library(stringr)
 ```
 
 *IMDB URL*
@@ -99,8 +101,6 @@ colnames(year_list_sub) <- "year"
 
 **User Reviews, Critic Reviews, and Popularity Rating**
 ```{r}
-library(rvest)
-library(dplyr)
 home_link <- 'https://www.imdb.com/chart/toptv/'
 main_page <- read_html(home_link)
 
@@ -186,10 +186,82 @@ show_data
 **________________________________________________________**
 ```{r}
 ```
+
 **2.**
 ```{r}
 
+
+urls <- c("https://www.imdb.com/title/tt0903747/reviews/?ref_=tt_urv_sm",
+          "https://www.imdb.com/title/tt5491994/reviews/?ref_=tt_urv_sm",
+          "https://www.imdb.com/title/tt0795176/reviews/?ref_=tt_urv_sm",
+          "https://www.imdb.com/title/tt0185906/reviews/?ref_=tt_urv_sm",
+          "https://www.imdb.com/title/tt7366338/reviews/?ref_=tt_urv_sm")
+
+df <- list()
+
+for(i in seq_along(urls)){
+  
+  sessions <- bow(urls[i], user_agent = "Educational")
+
+#User name
+userName <- scrape(sessions) %>%
+html_nodes('a.ipc-link.ipc-link--base') %>%
+html_text() %>%
+  head(20)
+
+#Date reviewed
+dateReview <- scrape(sessions) %>%
+html_nodes('li.ipc-inline-list__item.review-date') %>%
+html_text() %>%
+  head(20)
+
+#User rating
+userRating <- scrape(sessions) %>%
+html_nodes('span.ipc-rating-star--rating') %>%
+html_text() %>%
+  head(20)
+
+#Title of the review
+reviewTitle <- scrape(sessions) %>%
+html_nodes('h3.ipc-title__text') %>%
+html_text() %>%
+  head(20)
+
+#Helpful
+helpful <- scrape(sessions) %>%
+html_nodes('span.ipc-voting__label__count.ipc-voting__label__count--up') %>%
+html_text() %>%
+  head(20)
+
+#Unhelpful
+unhelpful <- scrape(sessions) %>%
+html_nodes('.ipc-voting__label__count--down') %>%
+html_text() %>%
+  head(20)
+
+#Data frame for the user reviews.
+userReviews <- data.frame(user_Name = userName[1:20],
+                          Date_Reviewed = dateReview[1:20],
+                          user_Rating = userRating[1:20],
+                          Review_Title = reviewTitle[1:20],
+                          Helpful = helpful[1:20],
+                          Unhelpful = unhelpful[1:20],
+                          stringsAsFactors = F)
+
+df[[i]] <- userReviews
+}
+
+df[[1]]
+df[[2]]
+df[[3]]
+df[[4]]
+df[[5]]
 ```
+
+```{r}
+
+```
+
 
 *Final List*
 ```{r}
