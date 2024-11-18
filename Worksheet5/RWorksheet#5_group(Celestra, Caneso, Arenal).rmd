@@ -91,83 +91,42 @@ html_text
 home_link <- 'https://www.imdb.com/chart/toptv/'
 main_page <- read_html(home_link)
 
-# Extract links to individual TV show pages
 links <- main_page %>%
   html_nodes("a.ipc-title-link-wrapper") %>%
   html_attr("href")
 
-# Ensure we have links
-if(length(links) == 0) {
-  stop("No links found")
-}
-
-# Loop through each show page and extract relevant data
+# Loop to get link of each show's page
 show_data <- lapply(links, function(link) {
   complete_link <- paste0("https://imdb.com", link)
   
-  # Get the show's page
-  usrv_link <- tryCatch({
-    read_html(complete_link)
-  }, error = function(e) {
-    return(NULL)  # If there's an error, return NULL
-  })
-  
-  # If the show page wasn't loaded successfully, skip to the next iteration
-  if (is.null(usrv_link)) return(NULL)
-  # Extract user review page link (if exists)
+  #loop to get the link for user review page
+  usrv_link <- read_html(complete_link)
   usrv_link_page <- usrv_link %>%
     html_nodes('a.isReview') %>%
     html_attr("href")
   
-  # Check if the user review link exists
-  if (length(usrv_link_page) == 0) {
-    usrv_link_page <- NA
-  } else {
-    usrv_link_page <- usrv_link_page[1]
-  }
-  # Extract critic reviews (if they exist)
+  #loop to get user reviews of each shows
+  usrv <- read_html(paste0("https://imdb.com", usrv_link_page[1]))
+  usrv_count <- usrv %>%
+    html_nodes('[data-testid="tturv-total-reviews"]') %>%
+    html_text()
+  
+  #loop to extract critic reviews
   critic <- usrv_link %>%
-    html_nodes("span.score") %>%
-    html_text()
+              html_nodes("span.score") %>%
+              html_text()
+  critic_df <- data.frame(Critic_Reviews = critic[2], stringsAsFactors = FALSE)
   
-  # Handle case where there may be no critic reviews
-  critic_review <- if(length(critic) >= 2) critic[2] else NA
-  critic_df <- data.frame(Critic_Reviews = critic_review, stringsAsFactors = FALSE)
-  
-  # Extract popularity rating (if it exists)
+  #loop to extract pop rating
   pop_rating <- usrv_link %>%
-    html_nodes('[data-testid="hero-rating-bar__popularity__score"]') %>%
-    html_text()
+              html_nodes('[data-testid="hero-rating-bar__popularity__score"]') %>%
+              html_text()
+  pop_rating_df <- data.frame(Popularity_Rating = pop_rating[2], stringsAsFactors = FALSE)
   
-  # Handle missing popularity rating
-  pop_rating <- if(length(pop_rating) > 0) pop_rating else NA
-  
-  # If a user review link exists, extract the user review count
-  usrv_count <- NA
-  if (!is.na(usrv_link_page)) {
-    usrv_page <- tryCatch({
-      read_html(paste0("https://imdb.com", usrv_link_page))
-    }, error = function(e) {
-      return(NULL)  # If user review page fails to load
-    })
-    
-    # If user review page loads, extract review count
-    if (!is.null(usrv_page)) {
-      usrv_count <- usrv_page %>%
-        html_nodes('[data-testid="tturv-total-reviews"]') %>%
-        html_text()
-    }
-  }
-  # Return a data frame with the extracted data
-  return(data.frame(User_Reviews = usrv_count, 
-                    Critic = critic_df$Critic_Reviews, 
-                    Popularity_Rating = pop_rating, 
-                    stringsAsFactors = FALSE))
+  return(data.frame(User_Reviews = usrv_count, Critic = critic_df, pop = pop_rating_df)) 
 })
-# Combine all show data into a single data frame (ignoring NULL values)
-show_data <- bind_rows(show_data)
-# View the first few rows
-show_data <- head(show_data, 25)
+
+showss <- do.call(rbind, show_data)
 ```
 
 **FINAL DATA**
@@ -178,11 +137,10 @@ tv_shows <- data.frame(Ranking = split_df$ranks,
                        Release_Year = year_list[1:25],
                        Rating = rating_list[1:25],
                        No._of_Voter = people_list[1:25],
-                       User_Review = show_data$User_Reviews,
-                       Popularity = show_data$Popularity_Rating,
-                       Critic = show_data$Critic)
-
-kable(tv_shows, padding = 20, caption = "Top TV Shows")
+                       User_Review = showss$User_Reviews,
+                       Popularity = showss$Popularity_Rating,
+                       Critic_Reviews = showss$Critic_Reviews)
+tv_shows
 ```
 **________________________________________________________**
 ```{r}
@@ -231,7 +189,7 @@ html_text() %>%
 
 #Helpful
 helpful <- scrape(sessions) %>%
-html_nodes('span.ipc-voting__label__count.ipc-voting__label__count--up') %>%
+html_nodes('span.ipc-voting__label') %>%
 html_text()
 
 #Unhelpful
