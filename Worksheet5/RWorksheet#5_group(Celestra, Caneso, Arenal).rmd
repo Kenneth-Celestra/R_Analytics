@@ -21,7 +21,7 @@ library(httr)
 library(polite)
 library(dplyr)
 library(stringr)
-library(knitr)
+library(knitr) 
 ```
 
 *IMDB URL*
@@ -222,22 +222,12 @@ df[[5]]
 
 **3.**
 ```{r}
-library(ggplot2)
-years <- substr(year_list, 1,4)
-years <- as.numeric(years)      
-
-ggplot(data.frame(Year = years), aes(x = Year)) +
-  geom_line(stat = "count", fill = "skyblue", color = "blue") +
-  labs(title = "Number of TV Shows Released by Year",
-       x = "Year",
-       y = "Number of TV Shows") +
-  theme_minimal()
-
-most_shows_year <- as.data.frame(table(years))
-most_shows_year <- most_shows_year[which.max(most_shows_year$Freq), ]
-print(most_shows_year)
+#just for space
 ```
 
+
+
+**_______________________________________________________________________________________________**
 ```{r}
 #just for space
 ```
@@ -245,82 +235,20 @@ print(most_shows_year)
 
 **[EXTRACTING AMAZON PRODUCT REVIEWS]**
 ```{r}
-library(rvest)
-library(dplyr)
-
-amazonCategory <- c(
-  'https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9',
-  'https://www.amazon.com/s?k=laptop&crid=15FICF43OPKJ2&sprefix=laptop%2Caps%2C1359&ref=nb_sb_ss_ts-doa-p_1_6',
-  'https://www.amazon.com/s?k=pc+cases&crid=3232B9XX8J30L&sprefix=pccase%2Caps%2C674&ref=nb_sb_ss_ts-doa-p_3_6',
-  'https://www.amazon.com/s?k=gaming+chair&crid=1QD90SHFVLWF3&sprefix=ganing%2Caps%2C529&ref=nb_sb_ss_w_hit-vc-lth_gaming-chair_k0_1_6',
-  'https://www.amazon.com/s?k=desk&crid=6858WNPPCX45&sprefix=desk%2Caps%2C420&ref=nb_sb_ss_w_hit-vc-lth_desk_k0_1_4'
-)
+amazonCategory <- c('https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9',
+                    'https://www.amazon.com/s?k=laptop&crid=15FICF43OPKJ2&sprefix=laptop%2Caps%2C1359&ref=nb_sb_ss_ts-doa-p_1_6',
+                    'https://www.amazon.com/s?k=pc+cases&crid=3232B9XX8J30L&sprefix=pccase%2Caps%2C674&ref=nb_sb_ss_ts-doa-p_3_6',
+                     'https://www.amazon.com/s?k=gaming+chair&crid=1QD90SHFVLWF3&sprefix=ganing%2Caps%2C529&ref=nb_sb_ss_w_hit-vc-lth_gaming-chair_k0_1_6',
+                    'https://www.amazon.com/s?k=desk&crid=6858WNPPCX45&sprefix=desk%2Caps%2C420&ref=nb_sb_ss_w_hit-vc-lth_desk_k0_1_4')
 
 amazon <- list()
 
-for (i in seq_along(amazonCategory)) {
-  Sys.sleep(5)  # Avoid overwhelming the server
+for(i in seq_along(amazonCategory)){
   
-  session2 <- bow(amazonCategory[i], user_agent = "Educational")
-  
-  # Scrape data
-  product_titles <- scrape(session2) %>%
-    html_nodes("span.a-text-normal") %>% 
-    html_text(trim = TRUE)
-  product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
-  
-  price <- scrape(session2) %>% 
-    html_nodes('.a-price .a-offscreen') %>% 
-    html_text(trim = TRUE)
-  
-  ratings <- scrape(session2) %>% 
-    html_nodes('span.a-icon-alt') %>% 
-    html_text(trim = TRUE)
-  
-  reviews <- scrape(session2) %>%
-    html_nodes('.s-link-style .s-underline-text') %>% 
-    html_text(trim = TRUE)
-  
-  descriptions <- scrape(session2) %>%
-    html_nodes('.a-row.a-size-base.a-color-secondary') %>% 
-    html_text(trim = TRUE)
-  
-  # Find the maximum length
-  max_length <- max(
-    length(product_titles), length(price), length(ratings),
-    length(reviews), length(descriptions)
-  )
-  
-  # Standardize all vectors to the same length
-  length(product_titles) <- max_length
-  length(price) <- max_length
-  length(ratings) <- max_length
-  length(reviews) <- max_length
-  length(descriptions) <- max_length
-  
-  # Create a data frame
-  amazon[[i]] <- data.frame(
-    ProductTitle = product_titles,
-    Price = price,
-    Ratings = ratings,
-    Reviews = reviews,
-    Description = descriptions,
-    stringsAsFactors = FALSE
-  )
+session2 <- bow(amazonCategory[i],
+user_agent = "Educational")
+
+#ADD mga kuluhaon sa amazon links
 }
-
-# Combine all data frames into one
-final_data <- do.call(rbind, amazon)
-
-# View the result
-print(final_data)
-
-#all_products <- bind_rows(motherboard_products, monitor_products, mouse_products, keyboard_products, headset_products)
-
-
-
-```
-
-```{r}
 ```
 
