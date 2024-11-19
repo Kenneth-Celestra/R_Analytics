@@ -21,7 +21,7 @@ library(httr)
 library(polite)
 library(dplyr)
 library(stringr)
-library(knitr)
+library(knitr) 
 ```
 
 *IMDB URL*
@@ -235,6 +235,20 @@ df[[5]]
 
 **[EXTRACTING AMAZON PRODUCT REVIEWS]**
 ```{r}
+amazonCategory <- c('https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9',
+                    'https://www.amazon.com/s?k=laptop&crid=15FICF43OPKJ2&sprefix=laptop%2Caps%2C1359&ref=nb_sb_ss_ts-doa-p_1_6',
+                    'https://www.amazon.com/s?k=pc+cases&crid=3232B9XX8J30L&sprefix=pccase%2Caps%2C674&ref=nb_sb_ss_ts-doa-p_3_6',
+                     'https://www.amazon.com/s?k=gaming+chair&crid=1QD90SHFVLWF3&sprefix=ganing%2Caps%2C529&ref=nb_sb_ss_w_hit-vc-lth_gaming-chair_k0_1_6',
+                    'https://www.amazon.com/s?k=desk&crid=6858WNPPCX45&sprefix=desk%2Caps%2C420&ref=nb_sb_ss_w_hit-vc-lth_desk_k0_1_4')
 
+amazon <- list()
+
+for(i in seq_along(amazonCategory)){
+  
+session2 <- bow(amazonCategory[i],
+user_agent = "Educational")
+
+#ADD mga kuluhaon sa amazon links
+}
 ```
 
