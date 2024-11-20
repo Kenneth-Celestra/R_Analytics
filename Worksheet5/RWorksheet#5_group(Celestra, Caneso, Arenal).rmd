@@ -256,24 +256,29 @@ for (i in seq_along(amazonCategory)) {
   # Scrape data
   product_titles <- scrape(session2) %>%
     html_nodes("span.a-text-normal") %>% 
-    html_text(trim = TRUE)
+    html_text() %>%
+    head(30)
   product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
   
   price <- scrape(session2) %>% 
     html_nodes('.a-price .a-offscreen') %>% 
-    html_text(trim = TRUE)
+    html_text() %>%
+    head(30)
   
   ratings <- scrape(session2) %>% 
     html_nodes('span.a-icon-alt') %>% 
-    html_text(trim = TRUE)
+    html_text() %>%
+    head(30)
   
   reviews <- scrape(session2) %>%
     html_nodes('.s-link-style .s-underline-text') %>% 
-    html_text(trim = TRUE)
+    html_text() %>%
+    head(30)
   
   descriptions <- scrape(session2) %>%
     html_nodes('.a-row.a-size-base.a-color-secondary') %>% 
-    html_text(trim = TRUE)
+    html_text() %>%
+    head(30)
   
   # Find the maximum length
   max_length <- max(
@@ -289,20 +294,95 @@ for (i in seq_along(amazonCategory)) {
   length(descriptions) <- max_length
   
   # Create a data frame
-  amazon[[i]] <- data.frame(
-    ProductTitle = product_titles,
-    Price = price,
-    Ratings = ratings,
-    Reviews = reviews,
-    Description = descriptions,
+  amaz <- data.frame(
+    ProductTitle = product_titles[1:16],
+    Price = price[1:16],
+    Ratings = ratings[1:16],
+    Reviews = reviews[1:16],
+    Description = descriptions[1:16],
     stringsAsFactors = FALSE
   )
+  
+amazon[[i]] <- amaz
 }
 
-# Combine all data frames into one
-final_data <- do.call(rbind, amazon)
+```
 
-# View the result
-print(final_data)
+```{r}
+# Combine all data frames into one
+amazon[[1]]
+amazon[[2]]
+```
+
+**Graphics Crad**
+```{r}
+
+gc_url <- c("https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9",
+            "https://www.amazon.com/s?k=graphics+card&page=2&crid=NY6LX0H811DR&qid=1732062550&sprefix=%2Caps%2C1816&ref=sr_pg_2")
+
+graphics <- list()
+
+for(i in seq_along(gc_url)){
+  
+  gSession <- bow(amazonCategory[i], user_agent = "Educational")
+  
+  # Scrape data
+  product_titles <- scrape(gSession) %>%
+    html_nodes("span.a-text-normal") %>% 
+    html_text() %>%
+    head(30)
+  product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
+  
+  price <- scrape(gSession) %>% 
+    html_nodes('.a-price .a-offscreen') %>% 
+    html_text() %>%
+    head(30)
+  
+  ratings <- scrape(gSession) %>% 
+    html_nodes('span.a-icon-alt') %>% 
+    html_text() %>%
+    head(30)
+  
+  reviews <- scrape(gSession) %>%
+    html_nodes('.s-link-style .s-underline-text') %>% 
+    html_text() %>%
+    head(30)
+  
+  descriptions <- scrape(gSession) %>%
+    html_nodes('.a-row.a-size-base.a-color-secondary') %>% 
+    html_text() %>%
+    head(30)
+  
+  # Find the maximum length
+  max_length <- max(
+    length(product_titles), length(price), length(ratings),
+    length(reviews), length(descriptions)
+  )
+  
+  # Standardize all vectors to the same length
+  length(product_titles) <- max_length
+  length(price) <- max_length
+  length(ratings) <- max_length
+  length(reviews) <- max_length
+  length(descriptions) <- max_length
+  
+  # Create a data frame
+  card <- data.frame(
+    ProductTitle = product_titles[1:15],
+    Price = price[1:15],
+    Ratings = ratings[1:15],
+    Reviews = reviews[1:15],
+    Description = descriptions[1:15],
+    stringsAsFactors = FALSE
+  )
+  
+graphics[[i]] <- card
+}
+```
+
+```{r}
+Gcard <- rbind(graphics[[1]], graphics[[2]])
+
+kable(Gcard, caption = "Graphics Card Category")
 ```
 
