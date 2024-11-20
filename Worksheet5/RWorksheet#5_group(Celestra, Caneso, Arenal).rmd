@@ -250,86 +250,9 @@ print(most_shows_year)
 
 **[EXTRACTING AMAZON PRODUCT REVIEWS]**
 ```{r}
-library(rvest)
-library(dplyr)
-
-amazonCategory <- c(
-  'https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9',
-  'https://www.amazon.com/s?k=laptop&crid=15FICF43OPKJ2&sprefix=laptop%2Caps%2C1359&ref=nb_sb_ss_ts-doa-p_1_6',
-  'https://www.amazon.com/s?k=pc+cases&crid=3232B9XX8J30L&sprefix=pccase%2Caps%2C674&ref=nb_sb_ss_ts-doa-p_3_6',
-  'https://www.amazon.com/s?k=gaming+chair&crid=1QD90SHFVLWF3&sprefix=ganing%2Caps%2C529&ref=nb_sb_ss_w_hit-vc-lth_gaming-chair_k0_1_6',
-  'https://www.amazon.com/s?k=desk&crid=6858WNPPCX45&sprefix=desk%2Caps%2C420&ref=nb_sb_ss_w_hit-vc-lth_desk_k0_1_4'
-)
-
-amazon <- list()
-
-for (i in seq_along(amazonCategory)) {
-  Sys.sleep(5)  # Avoid overwhelming the server
-  
-  session2 <- bow(amazonCategory[i], user_agent = "Educational")
-  
-  # Scrape data
-  product_titles <- scrape(session2) %>%
-    html_nodes("span.a-text-normal") %>% 
-    html_text() %>%
-    head(30)
-  product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
-  
-  price <- scrape(session2) %>% 
-    html_nodes('.a-price .a-offscreen') %>% 
-    html_text() %>%
-    head(30)
-  
-  ratings <- scrape(session2) %>% 
-    html_nodes('span.a-icon-alt') %>% 
-    html_text() %>%
-    head(30)
-  
-  reviews <- scrape(session2) %>%
-    html_nodes('.s-link-style .s-underline-text') %>% 
-    html_text() %>%
-    head(30)
-  
-  descriptions <- scrape(session2) %>%
-    html_nodes('.a-row.a-size-base.a-color-secondary') %>% 
-    html_text() %>%
-    head(30)
-  
-  # Find the maximum length
-  max_length <- max(
-    length(product_titles), length(price), length(ratings),
-    length(reviews), length(descriptions)
-  )
-  
-  # Standardize all vectors to the same length
-  length(product_titles) <- max_length
-  length(price) <- max_length
-  length(ratings) <- max_length
-  length(reviews) <- max_length
-  length(descriptions) <- max_length
-  
-  # Create a data frame
-  amaz <- data.frame(
-    ProductTitle = product_titles[1:16],
-    Price = price[1:16],
-    Ratings = ratings[1:16],
-    Reviews = reviews[1:16],
-    Description = descriptions[1:16],
-    stringsAsFactors = FALSE
-  )
-  
-amazon[[i]] <- amaz
-}
-
+#just for space
 ```
-
-```{r}
-# Combine all data frames into one
-amazon[[1]]
-amazon[[2]]
-```
-
-**Graphics Crad**
+**Graphics Card**
 ```{r}
 
 gc_url <- c("https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9",
@@ -338,8 +261,8 @@ gc_url <- c("https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=
 graphics <- list()
 
 for(i in seq_along(gc_url)){
-  
-  gSession <- bow(amazonCategory[i], user_agent = "Educational")
+  Sys.sleep(2)
+  gSession <- bow(gc_url[i], user_agent = "Educational")
   
   # Scrape data
   product_titles <- scrape(gSession) %>%
@@ -394,10 +317,291 @@ for(i in seq_along(gc_url)){
 graphics[[i]] <- card
 }
 ```
-
 ```{r}
 Gcard <- rbind(graphics[[1]], graphics[[2]])
 
 kable(Gcard, caption = "Graphics Card Category")
 ```
 
+**Laptop**
+```{r}
+lap_url <- c("https://www.amazon.com/s?k=laptop&crid=15FICF43OPKJ2&sprefix=laptop%2Caps%2C1359&ref=nb_sb_ss_ts-doa-p_1_6",
+            "https://www.amazon.com/s?k=laptop&page=2&crid=15FICF43OPKJ2&qid=1732065167&sprefix=laptop%2Caps%2C1359&ref=sr_pg_2")
+
+laptop <- list()
+
+for(i in seq_along(lap_url)){
+  
+  gSession <- bow(lap_url[i], user_agent = "Educational")
+  
+  # Scrape data
+  product_titles <- scrape(gSession) %>%
+    html_nodes("span.a-text-normal") %>% 
+    html_text() %>%
+    head(30)
+  product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
+  
+  price <- scrape(gSession) %>% 
+    html_nodes('.a-price .a-offscreen') %>% 
+    html_text() %>%
+    head(30)
+  
+  ratings <- scrape(gSession) %>% 
+    html_nodes('span.a-icon-alt') %>% 
+    html_text() %>%
+    head(30)
+  
+  reviews <- scrape(gSession) %>%
+    html_nodes('.s-link-style .s-underline-text') %>% 
+    html_text() %>%
+    head(30)
+  
+  descriptions <- scrape(gSession) %>%
+    html_nodes('.a-row.a-size-base.a-color-secondary') %>% 
+    html_text() %>%
+    head(30)
+  
+  # Find the maximum length
+  max_length <- max(
+    length(product_titles), length(price), length(ratings),
+    length(reviews), length(descriptions)
+  )
+  
+  # Standardize all vectors to the same length
+  length(product_titles) <- max_length
+  length(price) <- max_length
+  length(ratings) <- max_length
+  length(reviews) <- max_length
+  length(descriptions) <- max_length
+  
+  # Create a data frame
+  lappy <- data.frame(
+    ProductTitle = product_titles[1:15],
+    Price = price[1:15],
+    Ratings = ratings[1:15],
+    Reviews = reviews[1:15],
+    Description = descriptions[1:15],
+    stringsAsFactors = FALSE
+  )
+  
+laptop[[i]] <- lappy
+}
+```
+```{r}
+laptops <- rbind(laptop[[1]], laptop[[2]])
+
+kable(laptops, caption = "Laptop Category")
+```
+
+**PC Case**
+```{r}
+
+pc_url <- c("https://www.amazon.com/s?k=pc+cases&crid=3232B9XX8J30L&sprefix=pccase%2Caps%2C674&ref=nb_sb_ss_ts-doa-p_3_6",
+            "https://www.amazon.com/s?k=pc+cases&page=2&crid=3232B9XX8J30L&qid=1732066185&sprefix=pccase%2Caps%2C674&ref=sr_pg_2")
+
+case <- list()
+
+for(i in seq_along(pc_url)){
+  Sys.sleep(2)
+  gSession <- bow(pc_url[i], user_agent = "Educational")
+  
+  # Scrape data
+  product_titles <- scrape(gSession) %>%
+    html_nodes("span.a-text-normal") %>% 
+    html_text() %>%
+    head(30)
+  product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
+  
+  price <- scrape(gSession) %>% 
+    html_nodes('.a-price .a-offscreen') %>% 
+    html_text() %>%
+    head(30)
+  
+  ratings <- scrape(gSession) %>% 
+    html_nodes('span.a-icon-alt') %>% 
+    html_text() %>%
+    head(30)
+  
+  reviews <- scrape(gSession) %>%
+    html_nodes('.s-link-style .s-underline-text') %>% 
+    html_text() %>%
+    head(30)
+  
+  descriptions <- scrape(gSession) %>%
+    html_nodes('.a-row.a-size-base.a-color-secondary') %>% 
+    html_text() %>%
+    head(30)
+  
+  # Find the maximum length
+  max_length <- max(
+    length(product_titles), length(price), length(ratings),
+    length(reviews), length(descriptions)
+  )
+  
+  # Standardize all vectors to the same length
+  length(product_titles) <- max_length
+  length(price) <- max_length
+  length(ratings) <- max_length
+  length(reviews) <- max_length
+  length(descriptions) <- max_length
+  
+  # Create a data frame
+  pCase <- data.frame(
+    ProductTitle = product_titles[1:15],
+    Price = price[1:15],
+    Ratings = ratings[1:15],
+    Reviews = reviews[1:15],
+    Description = descriptions[1:15],
+    stringsAsFactors = FALSE
+  )
+  
+case[[i]] <- pCase
+}
+```
+```{r}
+pcCase <- rbind(case[[1]], case[[2]])
+
+kable(pcCase, caption = "PC Case Category")
+```
+
+**Monitors**
+```{r}
+
+monitor_url <- c("https://www.amazon.com/s?k=monitors&crid=UGL8HSJMO1RM&qid=1732067471&refresh=1&sprefix=monitors%2Caps%2C588&ref=sr_pg_1",
+               "https://www.amazon.com/s?k=monitors&page=2&crid=UGL8HSJMO1RM&qid=1732067581&refresh=1&sprefix=monitors%2Caps%2C588&ref=sr_pg_2")
+
+mon <- list()
+
+for(i in seq_along(monitor_url)){
+  Sys.sleep(2)
+  gSession <- bow(monitor_url[i], user_agent = "Educational")
+  
+  # Scrape data
+  product_titles <- scrape(gSession) %>%
+    html_nodes("span.a-text-normal") %>% 
+    html_text() %>%
+    head(30)
+  product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
+  
+  price <- scrape(gSession) %>% 
+    html_nodes('.a-price .a-offscreen') %>% 
+    html_text() %>%
+    head(30)
+  
+  ratings <- scrape(gSession) %>% 
+    html_nodes('span.a-icon-alt') %>% 
+    html_text() %>%
+    head(30)
+  
+  reviews <- scrape(gSession) %>%
+    html_nodes('.s-link-style .s-underline-text') %>% 
+    html_text() %>%
+    head(30)
+  
+  descriptions <- scrape(gSession) %>%
+    html_nodes('.a-row.a-size-base.a-color-secondary') %>% 
+    html_text() %>%
+    head(30)
+  
+  # Find the maximum length
+  max_length <- max(
+    length(product_titles), length(price), length(ratings),
+    length(reviews), length(descriptions)
+  )
+  
+  # Standardize all vectors to the same length
+  length(product_titles) <- max_length
+  length(price) <- max_length
+  length(ratings) <- max_length
+  length(reviews) <- max_length
+  length(descriptions) <- max_length
+  
+  # Create a data frame
+  moni <- data.frame(
+    ProductTitle = product_titles[1:15],
+    Price = price[1:15],
+    Ratings = ratings[1:15],
+    Reviews = reviews[1:15],
+    Description = descriptions,
+    stringsAsFactors = FALSE
+  )
+  
+mon[[i]] <- moni
+}
+```
+```{r}
+mOnitor <- rbind(mon[[1]], mon[[2]])
+
+kable(mOnitor, caption = "Monitor Category")
+```
+
+**CPU**
+```{r}
+
+cpu_url <- c("https://www.amazon.com/s?k=cpu&crid=3DBICI2YNNKHJ&sprefix=cpu%2Caps%2C768&ref=nb_sb_noss_1",
+               "https://www.amazon.com/s?k=cpu&page=2&crid=3DBICI2YNNKHJ&qid=1732067707&sprefix=cpu%2Caps%2C768&ref=sr_pg_2")
+
+processor <- list()
+
+for(i in seq_along(cpu_url)){
+  Sys.sleep(2)
+  gSession <- bow(cpu_url[i], user_agent = "Educational")
+  
+  # Scrape data
+  product_titles <- scrape(gSession) %>%
+    html_nodes("span.a-text-normal") %>% 
+    html_text() %>%
+    head(30)
+  product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
+  
+  price <- scrape(gSession) %>% 
+    html_nodes('.a-price .a-offscreen') %>% 
+    html_text() %>%
+    head(30)
+  
+  ratings <- scrape(gSession) %>% 
+    html_nodes('span.a-icon-alt') %>% 
+    html_text() %>%
+    head(30)
+  
+  reviews <- scrape(gSession) %>%
+    html_nodes('.s-link-style .s-underline-text') %>% 
+    html_text() %>%
+    head(30)
+  
+  descriptions <- scrape(gSession) %>%
+    html_nodes('.a-row.a-size-base.a-color-secondary') %>% 
+    html_text() %>%
+    head(30)
+  
+  # Find the maximum length
+  max_length <- max(
+    length(product_titles), length(price), length(ratings),
+    length(reviews), length(descriptions)
+  )
+  
+  # Standardize all vectors to the same length
+  length(product_titles) <- max_length
+  length(price) <- max_length
+  length(ratings) <- max_length
+  length(reviews) <- max_length
+  length(descriptions) <- max_length
+  
+  # Create a data frame
+  process <- data.frame(
+    ProductTitle = product_titles[1:15],
+    Price = price[1:15],
+    Ratings = ratings[1:15],
+    Reviews = reviews[1:15],
+    Description = descriptions,
+    stringsAsFactors = FALSE
+  )
+  
+processor[[i]] <- process
+}
+```
+```{r}
+proc <- rbind(processor[[1]], processor[[2]])
+
+kable(proc, caption = "CPU Category")
+```
