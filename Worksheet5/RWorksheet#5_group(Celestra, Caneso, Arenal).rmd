@@ -76,12 +76,14 @@ html_text
 *Episode and Year it was released*
 ```{r}
 episode_list <- scrape(session) %>%
-html_nodes('span.sc-5bc66c50-6.OOdsw.cli-title-metadata-item:nth-of-type(2)') %>%
-html_text
+  html_nodes('span.sc-300a8231-7.eaXxft.cli-title-metadata-item:nth-of-type(2)') %>%
+  html_text()
+
 
 year_list <- scrape(session) %>%
-html_nodes('span.sc-5bc66c50-6.OOdsw.cli-title-metadata-item:nth-of-type(1)') %>%
-html_text
+  html_nodes('span.sc-300a8231-7.eaXxft.cli-title-metadata-item:nth-of-type(1)') %>%
+  html_text()
+
 
 ```
 
@@ -139,7 +141,7 @@ tv_shows <- data.frame(Ranking = split_df$ranks,
                        User_Review = showss$User_Reviews,
                        Popularity = showss$Popularity_Rating,
                        Critic_Reviews = showss$Critic_Reviews)
-tv_shows
+write.csv(tv_shows, "TV_Shows.csv", row.names = F)
 ```
 **________________________________________________________**
 ```{r}
@@ -249,9 +251,6 @@ print(most_shows_year)
 
 4-5.
 **[EXTRACTING AMAZON PRODUCT REVIEWS]**
-```{r}
-#just for space
-```
 
 **Graphics Card**
 ```{r}
