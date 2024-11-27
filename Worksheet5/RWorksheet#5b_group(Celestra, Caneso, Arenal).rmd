@@ -19,11 +19,131 @@ library(stringr)
 library(knitr) 
 ```
 
+GPU Links
 ```{r}
-url <- c("https://www.amazon.com/RX-550-Computer-Graphics-DisplayPort/product-reviews/B08VHWFWSD/ref=cm_cr_getr_d_paging_btm_prev_1?ie=UTF8&reviewerType=all_reviews&pageNumber=1",
-         "https://www.amazon.com/RX-550-Computer-Graphics-DisplayPort/product-reviews/B08VHWFWSD/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+msi3060 <- c("https://www.amazon.com/MSI-GeForce-RTX-3060-12G/product-reviews/B08WPRMVWB/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+             "https://www.amazon.com/MSI-GeForce-RTX-3060-12G/product-reviews/B08WPRMVWB/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
 
-session <- bow(url, user_agent = "Educational")
-session
+
+
+ms4070 <- c("https://www.amazon.com/MSI-RTX-4070-Ti-16G/product-reviews/B0CSG8NYT3/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+             "https://www.amazon.com/MSI-RTX-4070-Ti-16G/product-reviews/B0CSG8NYT3/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+
+
+
+giga4060 <- c("https://www.amazon.com/GIGABYTE-Graphics-WINDFORCE-GV-N4060GAMING-OC-8GD/product-reviews/B0C8KQRH32/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+              "https://www.amazon.com/GIGABYTE-Graphics-WINDFORCE-GV-N4060GAMING-OC-8GD/product-reviews/B0C8KQRH32/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+
+
+
+geforce1050 <- c("https://www.amazon.com/SRhonyra-GeForce-Profile-Graphics-Monitor/product-reviews/B0CHFF1M1R/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+                 "https://www.amazon.com/SRhonyra-GeForce-Profile-Graphics-Monitor/product-reviews/B0CHFF1M1R/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+
+
+
+gtx750ti <- c("https://www.amazon.com/GPVHOSO-GTX-750Ti-Graphics-Interface/product-reviews/B0CY1TY7QW/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews")
+
+
+
+radeonhd6570 <- c("https://www.amazon.com/SAPLOS-Radeon-HD-6570-Graphics/product-reviews/B0B12FY9SF/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+                "https://www.amazon.com/SAPLOS-Radeon-HD-6570-Graphics/product-reviews/B0B12FY9SF/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+
+
+
+radeonrx550 <- c("https://www.amazon.com/51RISC-RX-550-Low-Profile/product-reviews/B0BNDNDZS6/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+                 "https://www.amazon.com/51RISC-RX-550-Low-Profile/product-reviews/B0BNDNDZS6/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+
+
+
+asus3050 <- c("https://www.amazon.com/ASUS-NVIDIA-GeForce-Gaming-Graphics/product-reviews/B0CVCG2VPK/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+              "https://www.amazon.com/ASUS-NVIDIA-GeForce-Gaming-Graphics/product-reviews/B0CVCG2VPK/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+
+
+
+giga4080 <- c("https://www.amazon.com/GIGABYTE-GeForce-WINDFORCE-Graphics-GV-N408SWF3V2-16GD/product-reviews/B0CSK2GHR8/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+              "https://www.amazon.com/GIGABYTE-GeForce-WINDFORCE-Graphics-GV-N408SWF3V2-16GD/product-reviews/B0CSK2GHR8/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+
+
+
+msi4070ti <- c("https://www.amazon.com/MSI-RTX-4070-SUPER-GAMING/product-reviews/B0CSGCTMT2/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
+               "https://www.amazon.com/MSI-RTX-4070-SUPER-GAMING/product-reviews/B0CSGCTMT2/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
 ```
+GPU Final List
+```{r}
+gpulist <- c(msi3060, ms4070, giga4060, geforce1050, gtx750ti, radeonhd6570, radeonrx550, asus3050, giga4080, msi4070ti)
 
+gpu <- list()
+
+for(i in seq_along(gpulist)){
+  gpusession <- bow(gpulist[i], user_agent = "Educational")
+  
+  user <- scrape(gpusession) %>%
+    html_nodes("div.a-profile-content") %>%
+    html_text() %>%
+    head(10)
+  
+   dater <- scrape(gpusession) %>%
+    html_nodes("span.review-date") %>%
+    html_text() %>%
+    head(10)
+   date_only <- str_extract(dater, "[A-Za-z]+ \\d{1,2}, \\d{4}")
+    review_dates_parsed <- as.Date(date_only, format = "%B %d, %Y")
+   
+   rate <- scrape(gpusession) %>%
+    html_nodes("i.review-rating") %>%
+    html_text() %>%
+    head(10)
+  individual_ratings <- as.numeric(str_extract(rate, "\\d+\\.\\d"))
+   
+  titlee <- scrape(gpusession) %>%
+    html_nodes("span.a-letter-space") %>%
+    html_text() %>%
+    head(10)
+  
+  textt <- scrape(gpusession) %>%
+    html_nodes("span.review-text") %>%
+    html_text() %>%
+    head(10)
+  
+  verified <- scrape(gpusession) %>%
+    html_nodes("span.a-class-mini") %>%
+    html_text() %>%
+    head(10)
+  
+  prodrev <- data.frame(
+    Reviewer = user,
+    Date = dater,
+    Rating = rate,
+    Title = titlee,
+    Text = textt,
+    Verification = verified
+  )
+  
+  gpu[i] <- prodrev
+  
+}
+
+```
+```{r}
+MSI1 <- rbind(gpu[[1]], gpu[[2]])
+MSI2 <- rbind(gpu[[3]], gpu[[4]])
+GIGA3 <- rbind(gpu[[5]], gpu[[6]])
+GEFORCE4 <- rbind(gpu[[7]], gpu[[8]])
+GTX5 <- gpu[[9]]
+RADEON6 <- rbind(gpu[[10]], gpu[[11]])
+RADEON7 <- rbind(gpu[[12]], gpu[[13]])
+ASUS8 <- rbind(gpu[[14]], gpu[[15]])
+GIGA9 <- rbind(gpu[[16]], gpu[[17]])
+MSI10 <- rbind(gpu[[18]], gpu[[19]])
+
+MSI1
+MSI2
+GIGA3
+GEFORCE4
+GTX5
+RADEON6
+RADEON7
+ASUS8
+GIGA9
+MSI10
+```
