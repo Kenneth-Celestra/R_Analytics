@@ -255,7 +255,7 @@ print(most_shows_year)
 **Graphics Card**
 ```{r}
 
-gc_url <- c("https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9",
+  gc_url <- c("https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9",
             "https://www.amazon.com/s?k=graphics+card&page=2&crid=NY6LX0H811DR&qid=1732062550&sprefix=%2Caps%2C1816&ref=sr_pg_2")
 
 graphics <- list()
@@ -275,11 +275,13 @@ for(i in seq_along(gc_url)){
     html_nodes('.a-price .a-offscreen') %>% 
     html_text() %>%
     head(30)
+  price <- as.numeric(str_extract(price, "\\d+\\.\\d"))
   
   ratings <- scrape(gSession) %>% 
     html_nodes('span.a-icon-alt') %>% 
     html_text() %>%
     head(30)
+ ratings <- as.numeric(str_extract(ratings, "\\d+\\.\\d"))
   
   reviews <- scrape(gSession) %>%
     html_nodes('.s-link-style .s-underline-text') %>% 
@@ -322,6 +324,10 @@ Gcard <- rbind(graphics[[1]], graphics[[2]])
 
 kable(Gcard, caption = "Graphics Card Category")
 ```
+```{r}
+write.csv(Gcard, "Gcard.csv", row.names = F)
+```
+
 
 **Laptop**
 ```{r}
@@ -345,11 +351,13 @@ for(i in seq_along(lap_url)){
     html_nodes('.a-price .a-offscreen') %>% 
     html_text() %>%
     head(30)
+  price <- as.numeric(str_extract(price, "\\d+\\.\\d"))
   
   ratings <- scrape(gSession) %>% 
     html_nodes('span.a-icon-alt') %>% 
     html_text() %>%
     head(30)
+  ratings <- as.numeric(str_extract(ratings, "\\d+\\.\\d"))
   
   reviews <- scrape(gSession) %>%
     html_nodes('.s-link-style .s-underline-text') %>% 
@@ -392,6 +400,10 @@ laptops <- rbind(laptop[[1]], laptop[[2]])
 
 kable(laptops, caption = "Laptop Category")
 ```
+```{r}
+write.csv(laptops, "Laptop.csv", row.names = F)
+```
+
 
 **PC Case**
 ```{r}
@@ -416,11 +428,13 @@ for(i in seq_along(pc_url)){
     html_nodes('.a-price .a-offscreen') %>% 
     html_text() %>%
     head(30)
+  price <- as.numeric(str_extract(price, "\\d+\\.\\d"))
   
   ratings <- scrape(gSession) %>% 
     html_nodes('span.a-icon-alt') %>% 
     html_text() %>%
     head(30)
+  ratings <- as.numeric(str_extract(ratings, "\\d+\\.\\d"))
   
   reviews <- scrape(gSession) %>%
     html_nodes('.s-link-style .s-underline-text') %>% 
@@ -463,6 +477,10 @@ pcCase <- rbind(case[[1]], case[[2]])
 
 kable(pcCase, caption = "PC Case Category")
 ```
+```{r}
+write.csv(pcCase, "PC_Case.csv", row.names = F)
+```
+
 
 **Monitors**
 ```{r}
@@ -487,11 +505,13 @@ for(i in seq_along(monitor_url)){
     html_nodes('.a-price .a-offscreen') %>% 
     html_text() %>%
     head(30)
+  price <- as.numeric(str_extract(price, "\\d+\\.\\d"))
   
   ratings <- scrape(gSession) %>% 
     html_nodes('span.a-icon-alt') %>% 
     html_text() %>%
     head(30)
+  ratings <- as.numeric(str_extract(ratings, "\\d+\\.\\d"))
   
   reviews <- scrape(gSession) %>%
     html_nodes('.s-link-style .s-underline-text') %>% 
@@ -534,6 +554,10 @@ mOnitor <- rbind(mon[[1]], mon[[2]])
 
 kable(mOnitor, caption = "Monitor Category")
 ```
+```{r}
+write.csv(mOnitor, "Monitor.csv", row.names = F)
+```
+
 
 **CPU**
 ```{r}
@@ -558,11 +582,13 @@ for(i in seq_along(cpu_url)){
     html_nodes('.a-price .a-offscreen') %>% 
     html_text() %>%
     head(30)
+  price <- as.numeric(str_extract(price, "\\d+\\.\\d"))
   
   ratings <- scrape(gSession) %>% 
     html_nodes('span.a-icon-alt') %>% 
     html_text() %>%
     head(30)
+  ratings <- as.numeric(str_extract(ratings, "\\d+\\.\\d"))
   
   reviews <- scrape(gSession) %>%
     html_nodes('.s-link-style .s-underline-text') %>% 
@@ -605,3 +631,9 @@ proc <- rbind(processor[[1]], processor[[2]])
 
 kable(proc, caption = "CPU Category")
 ```
+```{r}
+write.csv(proc, "CPU.csv", row.names = F)
+```
+
+
+**The data that we have extracted are the 
