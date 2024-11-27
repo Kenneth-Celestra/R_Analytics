@@ -247,7 +247,7 @@ print(most_shows_year)
 #just for space
 ```
 
-
+4-5.
 **[EXTRACTING AMAZON PRODUCT REVIEWS]**
 ```{r}
 #just for space
@@ -636,7 +636,114 @@ kable(proc, caption = "CPU Category")
 write.csv(proc, "CPU.csv", row.names = F)
 ```
 
+6.
+The extracted dataset contains information on 150 products across five categories: Laptops, CPU, Graphics Card, Monitors, and PC Cases, with 30 products selected from each category. For each product, the dataset includes the price, description, ratings, and reviews.The product title contains a string which shows the name of the product. The price is represented as a numeric value indicating the cost of the product. The ratings are numerical, ranging from 0 to 5, and reflect the average customer satisfaction score.The reviews field contains an integer representing the total number of customer reviews. Finally, the description is a text field providing a brief overview of the product's features
+
+7.
+Competitive Benchmarking and Pricing Trends Analysis:
+The dataset enables businesses to perform competitive benchmarking by comparing product prices within and across categories (e.g., laptops, CPUs, graphics cards, monitors, and PC cases). By analyzing pricing trends, businesses can gain critical insights into market positioning and consumer preferences.
+
+8.
 ```{r}
+library(ggplot2)
+
+# Read the CSV files and calculate the mean price for each category
+cpu_price <- read.csv("CPU.csv")
+gcard_price <- read.csv("Gcard.csv")
+laptop_price <- read.csv("Laptop.csv")
+monitor_price <- read.csv("Monitor.csv")
+PCcase_price <- read.csv("PC_Case.csv")
+
+# Calculate the mean price for each category
+mean_cpu <- mean(cpu_price$Price)
+mean_gcard <- mean(gcard_price$Price)
+mean_laptop <- mean(laptop_price$Price)
+mean_monitor <- mean(monitor_price$Price)
+mean_pc_case <- mean(PCcase_price$Price)
+
+# Create a data frame to store the average prices
+avg_prices <- data.frame(
+  Category = c("CPU", "Graphics Card", "Laptop", "Monitor", "PC Case"),
+  Average_Price = c(mean_cpu, mean_gcard, mean_laptop, mean_monitor, mean_pc_case)
+)
+
+# Create the bar plot
+ggplot(avg_prices, aes(x = Category, y = Average_Price, fill = Category)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Price Comparison by Category",
+       x = "Product Category", 
+       y = "Average Price ($)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
 
 ```
+The graph provides valuable insights into competitive benchmarking and pricing trends across different product categories in the computing market. Laptops stand out as the most expensive category, with an average price exceeding $300, indicating their premium nature and potential for higher profit margins. CPUs and graphics cards fall into a similar pricing tier, both averaging slightly above $200, which could reflect their high demand among gamers and professionals building custom systems. Monitors, priced around $150 on average, are moderately positioned, suggesting they cater to a broad range of users with varying budgets. Finally, PC cases are the least expensive category, averaging under $100, highlighting their relatively low-cost nature compared to other components. These insights are crucial for businesses looking to align their pricing strategies with market trends and remain competitive in these product segments.
 
+9.
+```{r}
+# Load the necessary library
+library(ggplot2)
+
+# Read the data
+cpu_price <- read.csv("CPU.csv")
+gcard_price <- read.csv("Gcard.csv")
+laptop_price <- read.csv("Laptop.csv")
+monitor_price <- read.csv("Monitor.csv")
+PCcase_price <- read.csv("PC_Case.csv")
+
+# Combine the data for price and ratings into one data frame
+price_data <- data.frame(
+  Category = rep(c("CPU", "Graphics Card", "Laptop", "Monitor", "PC Case"), 
+                 times = c(nrow(cpu_price), nrow(gcard_price), nrow(laptop_price), nrow(monitor_price), nrow(PCcase_price))),
+  Price = c(cpu_price$Price, gcard_price$Price, laptop_price$Price, monitor_price$Price, PCcase_price$Price),
+  Ratings = c(cpu_price$Ratings, gcard_price$Ratings, laptop_price$Ratings, monitor_price$Ratings, PCcase_price$Ratings)
+)
+
+# Price Plot using ggplot2
+price_plot <- ggplot(price_data, aes(x = Category, y = Price, fill = Category)) +
+  geom_boxplot() +
+  labs(title = "Price by Category", y = "Price ($)", x = "Category") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for readability
+
+# Ratings Plot using ggplot2
+ratings_plot <- ggplot(price_data, aes(x = Category, y = Ratings, fill = Category)) +
+  geom_boxplot() +
+  labs(title = "Ratings by Category", y = "Ratings", x = "Category") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for readability
+
+# Print the plots side by side
+library(gridExtra)
+grid.arrange(price_plot, ratings_plot, ncol = 2)
+
+
+```
+10.
+```{r}
+# Rank products by price and ratings for each category
+
+# Rank by price (highest to lowest)
+cpu_price$Price_Rank <- rank(-cpu_price$Price)  # Negative sign for descending order
+gcard_price$Price_Rank <- rank(-gcard_price$Price)
+laptop_price$Price_Rank <- rank(-laptop_price$Price)
+monitor_price$Price_Rank <- rank(-monitor_price$Price)
+PCcase_price$Price_Rank <- rank(-PCcase_price$Price)
+
+# Rank by ratings (highest to lowest)
+cpu_price$Rating_Rank <- rank(-cpu_price$Ratings)  
+gcard_price$Rating_Rank <- rank(-gcard_price$Ratings)
+laptop_price$Rating_Rank <- rank(-laptop_price$Ratings)
+monitor_price$Rating_Rank <- rank(-monitor_price$Ratings)
+PCcase_price$Rating_Rank <- rank(-PCcase_price$Ratings)
+
+# View the top ranked products for each category 
+head(cpu_price)
+head(gcard_price)
+head(laptop_price)
+head(monitor_price)
+head(PCcase_price)
+
+```
+Ranking products by price and ratings provides insights into how cost and customer satisfaction relate. The price rank identifies the most expensive products, often premium options, but doesn't necessarily reflect customer satisfaction. In contrast, the rating rank shows which products are most highly regarded by consumers, regardless of their price. Comparing these rankings helps highlight whether consumers prioritize cost or quality. For example, in Laptops, mid-range models may have higher ratings despite lower prices, while in PC Cases, budget-friendly products could be highly rated for their value and functionality. This comparison aids in understanding the balance between price and quality in each category.
