@@ -1,0 +1,29 @@
+---
+title: "RWorkSheet#5b_group(Celestra,Caneso,Arenal)"
+author: "Rovel Jan Caneso"
+date: "2024-11-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Libraries**
+```{r}
+library(rvest)
+library(httr)
+library(polite)
+library(dplyr)
+library(stringr)
+library(knitr) 
+```
+
+```{r}
+url <- c("https://www.amazon.com/RX-550-Computer-Graphics-DisplayPort/product-reviews/B08VHWFWSD/ref=cm_cr_getr_d_paging_btm_prev_1?ie=UTF8&reviewerType=all_reviews&pageNumber=1",
+         "https://www.amazon.com/RX-550-Computer-Graphics-DisplayPort/product-reviews/B08VHWFWSD/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+
+session <- bow(url, user_agent = "Educational")
+session
+```
+

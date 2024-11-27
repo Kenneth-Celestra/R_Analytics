@@ -252,6 +252,7 @@ print(most_shows_year)
 ```{r}
 #just for space
 ```
+
 **Graphics Card**
 ```{r}
 
@@ -635,5 +636,7 @@ kable(proc, caption = "CPU Category")
 write.csv(proc, "CPU.csv", row.names = F)
 ```
 
+```{r}
 
-**The data that we have extracted are the 
+```
+
