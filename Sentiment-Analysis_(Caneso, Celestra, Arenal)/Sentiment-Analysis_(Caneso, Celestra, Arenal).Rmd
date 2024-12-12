@@ -1,0 +1,42 @@
+---
+title: "Sentiment-Analysis-Project"
+output: pdf_document
+date: "2024-12-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(tidyverse)
+library(syuzhet)
+
+tweetsDF <- read.csv("tweetsDf.csv")
+
+full_df <- tweetsDF
+```
+
+### Codechunks for modifying/cleaning the dataset ###
+```{r}
+# Codes for cleaning the dataset
+clean <- full_df %>%
+  mutate(text = str_to_lower(text),                     
+         text = str_remove_all(text, "http\\S+"),       
+         text = str_remove_all(text, "@\\w+"),          
+         text = str_remove_all(text, "#\\w+"),          
+         text = str_remove_all(text, "\\d+"),           
+         text = str_remove_all(text, "[^\\w\\s]"),     
+         text = str_squish(text),                      
+         sentiment = get_sentiment(text, method = "bing")) 
+
+# Modified the dataset, added a date and hour column converted from the "created" column of tweetsDF
+clean <- clean %>%
+  mutate(date = ymd_hms(created)) %>%  
+  mutate(hour = hour(date))           
+
+```
+
