@@ -19,131 +19,157 @@ library(stringr)
 library(knitr) 
 ```
 
-GPU Links
 ```{r}
-msi3060 <- c("https://www.amazon.com/MSI-GeForce-RTX-3060-12G/product-reviews/B08WPRMVWB/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-             "https://www.amazon.com/MSI-GeForce-RTX-3060-12G/product-reviews/B08WPRMVWB/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+# Define URLs
+url <- "https://www.amazon.com/"
+session <- bow(url, 
+               user_agent = "Educational")
+session
 
-
-
-ms4070 <- c("https://www.amazon.com/MSI-RTX-4070-Ti-16G/product-reviews/B0CSG8NYT3/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-             "https://www.amazon.com/MSI-RTX-4070-Ti-16G/product-reviews/B0CSG8NYT3/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
-
-
-
-giga4060 <- c("https://www.amazon.com/GIGABYTE-Graphics-WINDFORCE-GV-N4060GAMING-OC-8GD/product-reviews/B0C8KQRH32/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-              "https://www.amazon.com/GIGABYTE-Graphics-WINDFORCE-GV-N4060GAMING-OC-8GD/product-reviews/B0C8KQRH32/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
-
-
-
-geforce1050 <- c("https://www.amazon.com/SRhonyra-GeForce-Profile-Graphics-Monitor/product-reviews/B0CHFF1M1R/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-                 "https://www.amazon.com/SRhonyra-GeForce-Profile-Graphics-Monitor/product-reviews/B0CHFF1M1R/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
-
-
-
-gtx750ti <- c("https://www.amazon.com/GPVHOSO-GTX-750Ti-Graphics-Interface/product-reviews/B0CY1TY7QW/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews")
-
-
-
-radeonhd6570 <- c("https://www.amazon.com/SAPLOS-Radeon-HD-6570-Graphics/product-reviews/B0B12FY9SF/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-                "https://www.amazon.com/SAPLOS-Radeon-HD-6570-Graphics/product-reviews/B0B12FY9SF/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
-
-
-
-radeonrx550 <- c("https://www.amazon.com/51RISC-RX-550-Low-Profile/product-reviews/B0BNDNDZS6/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-                 "https://www.amazon.com/51RISC-RX-550-Low-Profile/product-reviews/B0BNDNDZS6/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
-
-
-
-asus3050 <- c("https://www.amazon.com/ASUS-NVIDIA-GeForce-Gaming-Graphics/product-reviews/B0CVCG2VPK/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-              "https://www.amazon.com/ASUS-NVIDIA-GeForce-Gaming-Graphics/product-reviews/B0CVCG2VPK/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
-
-
-
-giga4080 <- c("https://www.amazon.com/GIGABYTE-GeForce-WINDFORCE-Graphics-GV-N408SWF3V2-16GD/product-reviews/B0CSK2GHR8/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-              "https://www.amazon.com/GIGABYTE-GeForce-WINDFORCE-Graphics-GV-N408SWF3V2-16GD/product-reviews/B0CSK2GHR8/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
-
-
-
-msi4070ti <- c("https://www.amazon.com/MSI-RTX-4070-SUPER-GAMING/product-reviews/B0CSGCTMT2/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
-               "https://www.amazon.com/MSI-RTX-4070-SUPER-GAMING/product-reviews/B0CSGCTMT2/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2")
+urls <- c('https://www.amazon.com/s?k=graphics+card&crid=6809YKENO5VZ&sprefix=graphics+%2Caps%2C516&ref=nb_sb_ss_ts-doa-p_1_9', 
+          'https://www.amazon.com/s?k=laptop&crid=15FICF43OPKJ2&sprefix=laptop%2Caps%2C1359&ref=nb_sb_ss_ts-doa-p_1_6',
+          'https://www.amazon.com/s?k=pc+cases&crid=3232B9XX8J30L&sprefix=pccase%2Caps%2C674&ref=nb_sb_ss_ts-doa-p_3_6',
+          'https://www.amazon.com/s?k=monitors&crid=UGL8HSJMO1RM&qid=1732067471&refresh=1&sprefix=monitors%2Caps%2C588&ref=sr_pg_1',
+          'https://www.amazon.com/s?k=cpu&crid=3DBICI2YNNKHJ&sprefix=cpu%2Caps%2C768&ref=nb_sb_noss_1')
 ```
-GPU Final List
 ```{r}
-gpulist <- c(msi3060, ms4070, giga4060, geforce1050, gtx750ti, radeonhd6570, radeonrx550, asus3050, giga4080, msi4070ti)
+#code to extract urls of the 10 products per category
+graphic_links <- read_html(urls[1]) %>%
+    html_nodes("a.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal") %>%
+    html_attr("href") %>%
+    unique() %>%
+    paste0("https://www.amazon.com", .)
 
-gpu <- list()
+laptop_links <- read_html(urls[2]) %>%
+    html_nodes("a.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal") %>%
+    html_attr("href") %>%
+    unique() %>%
+    paste0("https://www.amazon.com", .)
 
-for(i in seq_along(gpulist)){
-  gpusession <- bow(gpulist[i], user_agent = "Educational")
+case_links <- read_html(urls[3]) %>%
+    html_nodes("a.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal") %>%
+    html_attr("href") %>%
+    unique() %>%
+    paste0("https://www.amazon.com", .)
+
+monitor_links <- read_html(urls[4]) %>%
+    html_nodes("a.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal") %>%
+    html_attr("href") %>%
+    unique() %>%
+    paste0("https://www.amazon.com", .)
+
+cpu_links <- read_html(urls[5]) %>%
+    html_nodes("a.a-link-normal.s-underline-text.s-underline-link-text.s-link-style.a-text-normal") %>%
+    html_attr("href") %>%
+    unique() %>%
+    paste0("https://www.amazon.com", .)
+
+#df containing the url of 10 products per category
+product_category_links <- data.frame(
+  GraphicsCard = graphic_links[1:10],
+  Laptops = laptop_links[1:10],
+  PCcase = case_links[1:10],
+  Monitor = monitor_links[1:10],
+  CPU = cpu_links[1:10]
+)
+```
+```{r}
+#url of 10 products split into each of their category
+graphics_products_link <- product_category_links$GraphicsCard
+laptop_products_link <- product_category_links$Laptops
+PCcase_products_link <- product_category_links$PCcase
+monitor_products_link <- product_category_links$Monitor
+CPU_products_link <- product_category_links$CPU
+```
+```{r}
+scrape_reviews <- function(url) {
+  page <- read_html(url)
+          
+  #scraping the name of each product          
+  product_name <- page %>%
+    html_nodes(".a-size-large.product-title-word-break") %>%
+    html_text(trim = T) %>%
+    strsplit(" ") %>%                
+    .[[1]] %>%                       
+    .[1:4] %>%
+    gsub("\\,", "", .) %>%
+    paste(collapse = " ")  
   
-  user <- scrape(gpusession) %>%
-    html_nodes("div.a-profile-content") %>%
+  #scraping username of each reviewers
+  user_name_reviews <- page %>%
+    html_nodes(".a-profile-name") %>%
     html_text() %>%
-    head(10)
+    unique()
   
-   dater <- scrape(gpusession) %>%
-    html_nodes("span.review-date") %>%
+  #scraping review dates of users
+  review_dates <- page %>%
+    html_nodes(".a-size-base.a-color-secondary.review-date") %>%
     html_text() %>%
-    head(10)
-   date_only <- str_extract(dater, "[A-Za-z]+ \\d{1,2}, \\d{4}")
-    review_dates_parsed <- as.Date(date_only, format = "%B %d, %Y")
-   
-   rate <- scrape(gpusession) %>%
-    html_nodes("i.review-rating") %>%
+    gsub(".*on ", "", .)
+  
+  #scraping reviewer individual rating
+  reviewer_rating <- page %>%
+    html_nodes(".a-icon-alt") %>%
     html_text() %>%
-    head(10)
-  individual_ratings <- as.numeric(str_extract(rate, "\\d+\\.\\d"))
-   
-  titlee <- scrape(gpusession) %>%
-    html_nodes("span.a-letter-space") %>%
-    html_text() %>%
-    head(10)
+    gsub(" out.*", "", .) %>%
+    .[grepl("^[0-9.]+$", .)] %>% 
+    as.numeric()
   
-  textt <- scrape(gpusession) %>%
-    html_nodes("span.review-text") %>%
-    html_text() %>%
-    head(10)
+  #scraping review title
+  review_title <- page %>%
+    html_nodes(".a-size-base.a-link-normal.review-title.a-color-base.review-title-content.a-text-bold span:nth-of-type(2)") %>%
+    html_text()
   
-  verified <- scrape(gpusession) %>%
-    html_nodes("span.a-class-mini") %>%
-    html_text() %>%
-    head(10)
-  
-  prodrev <- data.frame(
-    Reviewer = user,
-    Date = dater,
-    Rating = rate,
-    Title = titlee,
-    Text = textt,
-    Verification = verified
-  )
-  
-  gpu[i] <- prodrev
-  
+  #scraping text reviews of each user
+  text_reviews <- page %>%
+    html_nodes(".a-expander-content.reviewText.review-text-content.a-expander-partial-collapse-content") %>%
+    html_text(trim = TRUE)
+    
+  data.frame(
+    Product_Name = rep(product_name, 20),
+    Reviewer_Names = user_name_reviews[2:21],
+    Review_Date = review_dates[1:20],
+    Individual_Ratings = reviewer_rating[1:20],
+    Review_Title = review_title[1:20],
+    Text_Reviews = text_reviews[1:20]
+    )
 }
 
+#applying scrape reviews to each of the product category's links
+graphic_reviews <- lapply(graphics_products_link, scrape_reviews)
+laptop_reviews <- lapply(laptop_products_link, scrape_reviews)
+case_reviews <- lapply(PCcase_products_link, scrape_reviews)
+monitor_reviews <- lapply(monitor_products_link, scrape_reviews)
+CPU_reviews <- lapply(CPU_products_link, scrape_reviews)
+
+```
+
+```{r}
+#combining the data frames of the product reviews per category
+graphics_reviews_df <- do.call(rbind, graphic_reviews)
+laptop_reviews_df <- do.call(rbind, laptop_reviews)
+case_reviews_df <- do.call(rbind, case_reviews)
+monitor_reviews_df <- do.call(rbind, monitor_reviews)
+CPU_reviews_df <- do.call(rbind, CPU_reviews)
 ```
 ```{r}
-MSI1 <- rbind(gpu[[1]], gpu[[2]])
-MSI2 <- rbind(gpu[[3]], gpu[[4]])
-GIGA3 <- rbind(gpu[[5]], gpu[[6]])
-GEFORCE4 <- rbind(gpu[[7]], gpu[[8]])
-GTX5 <- gpu[[9]]
-RADEON6 <- rbind(gpu[[10]], gpu[[11]])
-RADEON7 <- rbind(gpu[[12]], gpu[[13]])
-ASUS8 <- rbind(gpu[[14]], gpu[[15]])
-GIGA9 <- rbind(gpu[[16]], gpu[[17]])
-MSI10 <- rbind(gpu[[18]], gpu[[19]])
-
-MSI1
-MSI2
-GIGA3
-GEFORCE4
-GTX5
-RADEON6
-RADEON7
-ASUS8
-GIGA9
-MSI10
+#code to view the contents of the product's data frame
+print(graphics_reviews_df)
+print(laptop_reviews_df)
+print(case_reviews_df)
+print(monitor_reviews_df)
+print(CPU_reviews_df)
 ```
+```{r}
+#write.csv(graphics_reviews_df, "GraphicsCard_Reviews.csv")
+#write.csv(laptop_reviews_df, "Laptops_Reviews.csv")
+#write.csv(case_reviews_df, "PCcase_Reviews.csv")
+#write.csv(monitor_reviews_df, "Monitor_Reviews.csv")
+#write.csv(CPU_reviews_df, "CPU_Reviews.csv")
+```
+
+
+
+
+
+
