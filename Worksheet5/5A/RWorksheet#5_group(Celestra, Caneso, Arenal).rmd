@@ -268,7 +268,7 @@ for(i in seq_along(gc_url)){
   
   # Scrape data
   product_titles <- scrape(gSession) %>%
-    html_nodes("span.a-text-normal") %>% 
+    html_nodes('a.a-link-normal.s-line-clamp-2.s-link-style.a-text-normal') %>% 
     html_text() %>%
     head(30)
   product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
@@ -327,7 +327,7 @@ Gcard <- rbind(graphics[[1]], graphics[[2]])
 kable(Gcard, caption = "Graphics Card Category")
 ```
 ```{r}
-write.csv(Gcard, "Gcard.csv", row.names = F)
+#write.csv(Gcard, "Gcard.csv", row.names = F)
 ```
 
 
@@ -344,7 +344,7 @@ for(i in seq_along(lap_url)){
   
   # Scrape data
   product_titles <- scrape(gSession) %>%
-    html_nodes("span.a-text-normal") %>% 
+    html_nodes('a.a-link-normal.s-line-clamp-2.s-link-style.a-text-normal') %>% 
     html_text() %>%
     head(30)
   product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
@@ -403,7 +403,7 @@ laptops <- rbind(laptop[[1]], laptop[[2]])
 kable(laptops, caption = "Laptop Category")
 ```
 ```{r}
-write.csv(laptops, "Laptop.csv", row.names = F)
+#write.csv(laptops, "Laptop.csv", row.names = F)
 ```
 
 
@@ -421,7 +421,7 @@ for(i in seq_along(pc_url)){
   
   # Scrape data
   product_titles <- scrape(gSession) %>%
-    html_nodes("span.a-text-normal") %>% 
+    html_nodes('a.a-link-normal.s-line-clamp-2.s-link-style.a-text-normal') %>% 
     html_text() %>%
     head(30)
   product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
@@ -480,7 +480,7 @@ pcCase <- rbind(case[[1]], case[[2]])
 kable(pcCase, caption = "PC Case Category")
 ```
 ```{r}
-write.csv(pcCase, "PC_Case.csv", row.names = F)
+#write.csv(pcCase, "PC_Case.csv", row.names = F)
 ```
 
 
@@ -498,7 +498,7 @@ for(i in seq_along(monitor_url)){
   
   # Scrape data
   product_titles <- scrape(gSession) %>%
-    html_nodes("span.a-text-normal") %>% 
+    html_nodes('a.a-link-normal.s-line-clamp-2.s-link-style.a-text-normal') %>% 
     html_text() %>%
     head(30)
   product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
@@ -557,7 +557,7 @@ mOnitor <- rbind(mon[[1]], mon[[2]])
 kable(mOnitor, caption = "Monitor Category")
 ```
 ```{r}
-write.csv(mOnitor, "Monitor.csv", row.names = F)
+#write.csv(mOnitor, "Monitor.csv", row.names = F)
 ```
 
 
@@ -575,7 +575,7 @@ for(i in seq_along(cpu_url)){
   
   # Scrape data
   product_titles <- scrape(gSession) %>%
-    html_nodes("span.a-text-normal") %>% 
+    html_nodes('a.a-link-normal.s-line-clamp-2.s-link-style.a-text-normal') %>% 
     html_text() %>%
     head(30)
   product_titles <- product_titles[!grepl("Check each product page for other buying options", product_titles)]
@@ -634,7 +634,7 @@ proc <- rbind(processor[[1]], processor[[2]])
 kable(proc, caption = "CPU Category")
 ```
 ```{r}
-write.csv(proc, "CPU.csv", row.names = F)
+#write.csv(proc, "CPU.csv", row.names = F)
 ```
 
 6.
