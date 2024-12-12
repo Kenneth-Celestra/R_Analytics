@@ -143,11 +143,10 @@ tv_shows <- data.frame(Ranking = split_df$ranks,
                        User_Review = showss$User_Reviews,
                        Popularity = showss$Popularity_Rating,
                        Critic_Reviews = showss$Critic_Reviews)
-write.csv(tv_shows, "TV_Shows.csv", row.names = F)
+#write.csv(tv_shows, "TV_Shows.csv", row.names = F)
 ```
 **________________________________________________________**
 ```{r}
-#just for space
 ```
 
 **2. Top 5 TV Shows**
@@ -220,7 +219,6 @@ df[[5]]
 ```
 **________________________________________________________**
 ```{r}
-#just for space
 ```
 
 **3.**
@@ -248,7 +246,6 @@ print(most_shows_year)
 
 **_______________________________________________________________________________________________**
 ```{r}
-#just for space
 ```
 
 4-5.
