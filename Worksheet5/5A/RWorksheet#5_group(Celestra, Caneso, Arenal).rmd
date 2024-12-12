@@ -1,6 +1,8 @@
 ---
 title: "RWorksheet5_(Celestra, Caneso, Arenal)"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 date: "2024-11-06"
 ---
 
