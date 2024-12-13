@@ -39,4 +39,127 @@ clean <- clean %>%
   mutate(hour = hour(date))           
 
 ```
+### Trend Analysis ###
 
+For the trend analysis, we focused on the hourly tweet frequencies to observe how tweet activity changed over three distinct days. By examining the tweet count by hour, we aimed to identify moments when engagement spiked, potentially triggered by specific events, updates, or reactions. This analysis provides insights into when users were most active in discussing topics of interest and helps us understand the timeline of information dissemination and public engagement.
+
+
+```{r}
+# Summarize tweet frequency by hour and group them by day
+hourly_tweet_summary <- clean %>%
+  group_by(tweet_day = as.Date(date), tweet_hour = hour) %>%
+  summarise(tweet_volume = n(), .groups = "drop")
+
+# Split data into separate subsets for plotting by day
+day1_tweets_data <- hourly_tweet_summary %>% filter(tweet_day == unique(tweet_day)[1])
+day2_tweets_data <- hourly_tweet_summary %>% filter(tweet_day == unique(tweet_day)[2])
+day3_tweets_data <- hourly_tweet_summary %>% filter(tweet_day == unique(tweet_day)[3])
+
+```
+```{r}
+# Graph for the first day
+day1_tweet_graph <- ggplot(day1_tweets_data, aes(x = factor(tweet_hour), y = tweet_volume, fill = tweet_volume)) +
+  geom_bar(stat = "identity") +
+  labs(title = paste("Hourly Tweet Volume -", unique(day1_tweets_data$tweet_day)),
+       x = "Hour of the Day",
+       y = "Tweet Count") +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  scale_x_discrete(breaks = as.character(0:23)) +
+  theme_minimal() 
+day1_tweet_graph
+```
+Day 1 (2022-10-28):
+The graph illustrates a consistent yet low volume of tweets throughout the day. There are no significant spikes or surges in activity. This pattern suggests that no major event or incident related to the topic of interest occurred on this day. Tweet activity likely reflects routine or unrelated discussions.
+
+```{r}
+# Graph for the second day
+day2_tweet_graph <- ggplot(day2_tweets_data, aes(x = factor(tweet_hour), y = tweet_volume, fill = tweet_volume)) +
+  geom_bar(stat = "identity") +
+  labs(title = paste("Hourly Tweet Volume -", unique(day2_tweets_data$tweet_day)),
+       x = "Hour of the Day",
+       y = "Tweet Count") +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  scale_x_discrete(breaks = as.character(0:23)) +
+  theme_minimal() 
+day2_tweet_graph
+```
+Day 2 (2022-10-29):
+The second graph shows a sharp increase in tweet activity starting in the afternoon (around 3 PM), with a pronounced peak around 6 PM. This spike likely corresponds to the unfolding of the incident or the public becoming aware of breaking news. Social media activity during this time highlights its role as a platform for real-time information sharing and reactions to unfolding events.
+
+```{r}
+# Graph for the third day
+day3_tweet_graph <- ggplot(day3_tweets_data, aes(x = factor(tweet_hour), y = tweet_volume, fill = tweet_volume)) +
+  geom_bar(stat = "identity") +
+  labs(title = paste("Hourly Tweet Volume -", unique(day3_tweets_data$tweet_day)),
+       x = "Hour of the Day",
+       y = "Tweet Count") +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  scale_x_discrete(breaks = as.character(0:23)) +
+  theme_minimal()
+day3_tweet_graph
+```
+Day 3 (2022-10-30):
+The third graph displays a high volume of tweets during the early morning hours (midnight to 3 AM), followed by a gradual decline throughout the day. The elevated activity during the early hours reflects continued discussions, reactions, or updates related to the event. The decline in tweet volume later in the day suggests that the immediate emotional response subsided, giving way to more measured and less frequent discussions.
+
+### Sentiment Analysis ###
+
+For the sentiment analysis, we categorized tweets into three sentiment categories: Positive, Neutral, and Negative. By analyzing the distribution of these sentiments by hour, we aimed to understand the emotional tone of tweets and observe how sentiments shifted over time. This analysis provides insights into how people reacted emotionally to events and their progression over the three days.
+
+```{r}
+# Categorize sentiment into Positive, Neutral, and Negative by hour per day
+hourly_sentiment_summary <- clean %>%
+  mutate(sentiment_label = ifelse(sentiment > 0, "Positive",
+                                   ifelse(sentiment < 0, "Negative", "Neutral"))) %>%
+  group_by(tweet_day = as.Date(date), tweet_hour = hour, sentiment_label) %>%
+  summarise(sentiment_count = n(), .groups = "drop")
+
+# Filter each day's data for plotting graphs
+day1_sentiment_data <- hourly_sentiment_summary %>% filter(tweet_day == unique(tweet_day)[1])
+day2_sentiment_data <- hourly_sentiment_summary %>% filter(tweet_day == unique(tweet_day)[2])
+day3_sentiment_data <- hourly_sentiment_summary %>% filter(tweet_day == unique(tweet_day)[3])
+```
+
+```{r}
+# Plot sentiment trends for the first day
+day1_sentiment_graph <- ggplot(day1_sentiment_data, aes(x = factor(tweet_hour), y = sentiment_count, fill = sentiment_label)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = paste("Hourly Sentiment Distribution -", unique(day1_sentiment_data$tweet_day)),
+       x = "Hour of the Day",
+       y = "Tweet Count") +
+  scale_fill_manual(values = c("red", "orange", "yellow")) +
+  scale_x_discrete(breaks = as.character(0:23)) +
+  theme_minimal()
+day1_sentiment_graph
+```
+Day 1 (2022-10-28):
+The sentiment distribution is relatively balanced across the three categories (Positive, Neutral, and Negative). The absence of spikes in tweet volume or dominance of any specific sentiment indicates routine or unrelated discussions. This pattern supports the notion that no major event related to the topic had occurred yet.
+
+```{r}
+# Plot sentiment trends for the second day
+day2_sentiment_graph <- ggplot(day2_sentiment_data, aes(x = factor(tweet_hour), y = sentiment_count, fill = sentiment_label)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = paste("Hourly Sentiment Distribution -", unique(day2_sentiment_data$tweet_day)),
+       x = "Hour of the Day",
+       y = "Tweet Count") +
+  scale_fill_manual(values = c("red", "orange", "yellow")) +
+  scale_x_discrete(breaks = as.character(0:23)) +
+  theme_minimal()
+day2_sentiment_graph
+```
+Day 2 (2022-10-29):
+This graph shows a sharp increase in tweet activity during the afternoon and evening hours, with Negative sentiments dominating during these peaks. The predominance of negative sentiments aligns with the likely timing of an incident that provoked strong emotional responses, such as frustration, grief, or shock. Social media activity during this time reflects the immediate emotional reaction of users to unfolding events.
+
+```{r}
+# Plot sentiment trends for the third day
+day3_sentiment_graph <- ggplot(day3_sentiment_data, aes(x = factor(tweet_hour), y = sentiment_count, fill = sentiment_label)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = paste("Hourly Sentiment Distribution -", unique(day3_sentiment_data$tweet_day)),
+       x = "Hour of the Day",
+       y = "Tweet Count") +
+  scale_fill_manual(values = c("red", "orange", "yellow")) +
+  scale_x_discrete(breaks = as.character(0:23)) +
+  theme_minimal()
+day3_sentiment_graph
+```
+Day 3 (2022-10-30):
+The third graph demonstrates a large volume of tweets during the early hours, with Negative sentiments continuing to dominate. However, as the day progresses, the volume of tweets declines, and the distribution of sentiments becomes more balanced. This shift suggests that while users continued to discuss the event, the emotional intensity decreased, and conversations became more neutral or reflective.
